@@ -11,8 +11,9 @@ public class Mob : MonoBehaviour
     private Vector3 _direction;
     private Rigidbody _rigidbody;
     private Animator _animator;
+    private Target _target;
 
-    public event Action<Mob> Fall;
+    public event Action<Mob> Death;
 
     private void Awake()
     {
@@ -24,17 +25,31 @@ public class Mob : MonoBehaviour
 
     private void FixedUpdate()
     {
+        SetDirection();
         MoveForward();
 
         if (transform.position.y <= _deathHeigth)
         {
-            Fall?.Invoke(this);
+            Death?.Invoke(this);
         }
     }
 
-    public void SetDirection(Vector3 direction)
+    private void OnCollisionEnter(Collision collision)
     {
-        _direction = direction.normalized;
+        if (collision.gameObject.GetComponent<Target>() != null)
+        {
+            Death?.Invoke(this);
+        }
+    }
+
+    public void SetTarget(Target target)
+    {
+        _target = target;
+    }
+
+    private void SetDirection()
+    {
+        _direction = (_target.transform.position - transform.position).normalized;
 
         SetRotation();
     }

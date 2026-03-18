@@ -4,22 +4,20 @@ public class Spawner : MonoBehaviour
 {
     [SerializeField] private Mob _prefab;
     [SerializeField] private Explosion _explosion;
+    [SerializeField] private Target _target;
 
     public void SpawnMob()
     {
         Mob mob = Instantiate(_prefab, transform.position, Quaternion.identity);
 
-        Vector3 direction = Random.insideUnitSphere;
-        direction.y = 0f;
+        mob.SetTarget(_target);
 
-        mob.SetDirection(direction);
-
-        mob.Fall += DestroyMob;
+        mob.Death += DestroyMob;
     }
 
     private void DestroyMob(Mob mob)
     {
-        mob.Fall -= DestroyMob;
+        mob.Death -= DestroyMob;
 
         _explosion.ShowEffect(mob.transform.position);
 
