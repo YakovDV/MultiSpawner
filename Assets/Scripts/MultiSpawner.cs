@@ -1,17 +1,12 @@
 using System.Collections;
 using UnityEngine;
 
-public class SpawnManager : MonoBehaviour
+public class MultiSpawner : MonoBehaviour
 {
     [SerializeField] private Spawner[] _spawners;
-    [SerializeField] float _delay = 2.0f;
+    [SerializeField] private float _delay = 2.0f;
 
     private Coroutine _spawnCoroutine;
-
-    private void Awake()
-    {
-        _spawners = FindObjectsOfType<Spawner>();
-    }
 
     private void OnEnable()
     {
@@ -26,6 +21,8 @@ public class SpawnManager : MonoBehaviour
 
     private IEnumerator SpawnDelayed()
     {
+        WaitForSecondsRealtime delay = new (_delay);
+
         while (true)
         {
             if (_spawners.Length > 0)
@@ -34,7 +31,7 @@ public class SpawnManager : MonoBehaviour
                 _spawners[randomIndex].SpawnMob();
             }
 
-            yield return new WaitForSecondsRealtime(_delay);
+            yield return delay;
         }
     }
 }

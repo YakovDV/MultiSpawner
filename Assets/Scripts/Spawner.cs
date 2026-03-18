@@ -7,9 +7,12 @@ public class Spawner : MonoBehaviour
 
     public void SpawnMob()
     {
-        Quaternion rotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
+        Mob mob = Instantiate(_prefab, transform.position, Quaternion.identity);
 
-        Mob mob = Instantiate(_prefab, transform.position, rotation);
+        Vector3 direction = Random.insideUnitSphere;
+        direction.y = 0f;
+
+        mob.SetDirection(direction);
 
         mob.Fall += DestroyMob;
     }
